@@ -14,4 +14,5 @@ export async function appRouteTask (app: FastifyInstance) {
     app.delete("/task/:idTask", (...args) => handleTask.removeTask(...args))
     app.patch("/task/completed/:idTask", (...args) => handleTask.completedTask(...args))
 
+    app.post('/import/csv', (...args) => handleTask.importCSV(...args))
 }

@@ -1,6 +1,7 @@
 import Fastify from "fastify"
 import cors from "@fastify/cors"
 import fastidyJWT from "@fastify/jwt"
+import fastifyMultipart from "@fastify/multipart"
 
 // rotas
 import { appRouteTask } from "./http/controllers/task/routes"
@@ -25,6 +26,9 @@ app.register(cors, {
     origin: "*",
     logLevel: "debug",
 })
+
+
+app.register(fastifyMultipart)
 
 app.register(fastidyJWT, {
     secret: env.AUTH_SECRET_TOKEN

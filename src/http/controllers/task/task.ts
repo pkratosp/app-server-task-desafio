@@ -5,6 +5,7 @@ import { RequiredParams } from "src/services/errors/task/required-params-error"
 import { makeAllTaskByUserUseCase } from "src/services/factores/task_make/make-all-task-by-user-use-case"
 import { makeCreateNewTaskUseCase } from "src/services/factores/task_make/make-create-new-task-use-case"
 import { makeEditTaskUseCase } from "src/services/factores/task_make/make-edit-task-use-case"
+import { makeImportFIleCSVUseCase } from "src/services/factores/task_make/make-import-file-csv-use-case"
 import { makeRemoveTaskUseCase } from "src/services/factores/task_make/make-remove-task-use-case"
 import { makeTaskCompletedUseCase } from "src/services/factores/task_make/make-task-completed-use-case"
 import { ZodError, z } from "zod"
@@ -187,6 +188,46 @@ export class HandleTask {
             }
 
             throw error
+        }
+    }
+
+
+    public async importCSV(req: FastifyRequest, reply: FastifyReply) {
+        try {
+            const data = await req.file()
+            
+            const userJWT = await req.jwtDecode()
+
+            const userJWTShecma = z.object({
+                id: z.string().uuid(),
+            })
+
+            const userJWTZod = userJWTShecma.parse(userJWT)
+
+
+            if(data?.mimetype === 'text/csv') {
+                
+                const _makeImportFIleCSVUseCase = await makeImportFIleCSVUseCase()
+
+                await _makeImportFIleCSVUseCase.execute({ file: data.file, filename: data.filename, userId: userJWTZod.id })
+                
+                reply.status(200).send()
+
+            } else {
+
+                throw new Error('Arquivo não permitido')
+
+            }
+
+            
+        } catch (error) {
+            
+            if(error instanceof Error) {
+                return reply.status(500).send(error.message)
+            }
+
+            throw error
+
         }
     }
 }
