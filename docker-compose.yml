@@ -1,0 +1,18 @@
+version: '2'
+
+
+services:
+  postgresql:
+    image: 'bitnami/postgresql:latest'
+    environment:
+      - POSTGRESQL_DATABASE=tasks
+      - POSTGRESQL_USERNAME=username
+      - POSTGRESQL_PASSWORD=usernamePassword
+      - POSTGRESQL_POSTGRES_PASSWORD=usernamePassword
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgresql_data:/bitnami/postgresql
+
+volumes:
+  postgresql_data:

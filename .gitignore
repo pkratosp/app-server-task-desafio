@@ -1,0 +1,7 @@
+#pastas
+node_modules
+build
+coverage
+
+# arquivo
+.env
